@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            *{margin:0;padding:0;}
+            div{width:200px;line-height:20px;margin:5px auto 0;}
+            div,p{padding:10px;border:2px solid #eee;}
+        </style>
+    </head>
+    <body>
+        <div id="box">
+            div id = box
+            <p>p标签</p>
+        </div>
+        <div class="box">div class = box</div>
+        <div class="box">div class = box</div>
+        <div>
+          div标签
+          <p>p标签</p>
+        </div>
+    </body>
+    <script>
+        /**
+         * getElement获取元素
+         * @param  {string} selector 选择器
+         * @param  {boolean} returnArrayType 是否以数组形式返回HTMLcollection
+         * @return {[HTML | HTMLCollection | Array]}
+         */
+        function getElement(selector,returnArrayType){
+            if(selector){
+                var reg = /^(?:\#([\w\-]+)|\.([\w\-]+)|([\w\-]+))$/,
+                    result = reg.exec(selector),
+                    id = result[1],
+                    className = result[2],
+                    tag = result[3],
+                    arr = [],
+                    element = null;
+                if(result){
+                    if(id){
+                        element = document.getElementById(id);
+                        returnArrayType && arr.push(element);
+                    }
+                    if(className){
+                        // HTMLcollection伪数组
+                        element = document.getElementsByClassName(className);
+                        returnArrayType && arr.push.apply(arr,element);
+                    }
+                    if(tag){
+                        // HTMLcollection伪数组
+                        element = document.getElementsByTagName(tag);
+                        returnArrayType && arr.push.apply(arr,element);
+                    }
+                    return returnArrayType ? arr : element;
+                }
+                return [];
+            }else{
+                throw '函数getElement参数(selector)错误!';
+            }
+        };
+
+        getElement('#box').style.borderColor = '#999';
+
+        getElement('.box',1).forEach(function(item){
+            item.style.borderColor = '#ddd';
+        });
+
+        getElement('p',1).forEach(function(item){
+            item.style.borderColor = '#ff6600';
+        });
+
+    </script>
+</html>
+
