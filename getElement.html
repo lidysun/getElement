@@ -6,11 +6,13 @@
             *{margin:0;padding:0;}
             div{width:200px;line-height:20px;margin:5px auto 0;}
             div,p{padding:10px;border:2px solid #eee;}
+            p{margin-top:10px;}
         </style>
     </head>
     <body>
         <div id="box">
             div id = box
+            <p>p标签</p>
             <p>p标签</p>
         </div>
         <div class="box">div class = box</div>
@@ -28,6 +30,7 @@
          * @return {[HTML | HTMLCollection | Array]}
          */
         function getElement(selector,returnArrayType){
+            var d = this === window ? document : this; 
             if(selector){
                 var reg = /^(?:\#([\w\-]+)|\.([\w\-]+)|([\w\-]+))$/,
                     result = reg.exec(selector),
@@ -38,17 +41,17 @@
                     element = null;
                 if(result){
                     if(id){
-                        element = document.getElementById(id);
+                        element = d.getElementById(id);
                         returnArrayType && arr.push(element);
                     }
                     if(className){
                         // HTMLcollection伪数组
-                        element = document.getElementsByClassName(className);
+                        element = d.getElementsByClassName(className);
                         returnArrayType && arr.push.apply(arr,element);
                     }
                     if(tag){
                         // HTMLcollection伪数组
-                        element = document.getElementsByTagName(tag);
+                        element = d.getElementsByTagName(tag);
                         returnArrayType && arr.push.apply(arr,element);
                     }
                     return returnArrayType ? arr : element;
@@ -59,6 +62,8 @@
             }
         };
 
+        HTMLElement.prototype.getElement = getElement;
+
         getElement('#box').style.borderColor = '#999';
 
         getElement('.box',1).forEach(function(item){
@@ -68,6 +73,8 @@
         getElement('p',1).forEach(function(item){
             item.style.borderColor = '#ff6600';
         });
+
+        getElement('#box').getElement('p')[0].style.backgroundColor = '#eee';
 
     </script>
 </html>
